@@ -34,7 +34,7 @@ Download the latest **`.ablx`** from the [**Releases** page](https://github.com/
 2. Drag the `.ablx` onto that page.
 3. Right-click any MIDI clip → **Extensions → Show Chart**.
 
-Requires **Ableton Live 12.4 or newer with Extensions** (the Extensions feature is currently in the Live 12.4 beta; tested on 12.4.5b3). Prefer to build it yourself? See [Build from source](#build-from-source).
+Requires **Ableton Live 12.4.5 or newer with Extensions** (currently in the Live 12.4.5 beta; tested on 12.4.5b3). Prefer to build it yourself? See [Build from source](#build-from-source).
 
 ## Usage
 
@@ -50,7 +50,12 @@ Editing is delegated to Live's piano roll — adjust notes there, then re-open t
 
 ## Requirements
 
-- **Ableton Live 12.4.5 or newer with Extensions enabled** — the Extensions feature is currently in the Live 12.4.5 beta (tested on 12.4.5b3).
+**To install and use the extension** — only Ableton Live:
+
+- **Ableton Live 12.4.5 or newer with Extensions enabled** — the Extensions feature is currently in the Live 12.4.5 beta (tested on 12.4.5b3). The `.ablx` is self-contained and runs inside Live's Extension Host, so you do **not** need Node.js or the SDK installed to use it.
+
+**To build from source** (development only):
+
 - **Node.js ≥ 24**.
 - The **Ableton Extensions SDK (beta)** — distributed by Ableton and **not** included in this repository (see [Build from source](#build-from-source)).
 
