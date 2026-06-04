@@ -168,5 +168,5 @@ export function activate(activation: ActivationContext) {
     })();
   });
 
-  ctx.ui.registerContextMenuAction("MidiClip", "Show Chart…", "sheetMusic.showChart");
+  ctx.ui.registerContextMenuAction("MidiClip", "Show Chart", "sheetMusic.showChart");
 }

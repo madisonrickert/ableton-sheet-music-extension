@@ -9,6 +9,7 @@
   },
   "type": "module",
   "scripts": {
+    "setup": "node scripts/setup-sdk.mjs && npm install",
     "test": "vitest run",
     "typecheck": "tsc --noEmit && tsc -p ui/tsconfig.json",
     "build:ui": "vite build",
@@ -19,10 +20,10 @@
     "dev:ui": "vite"
   },
   "dependencies": {
-    "@ableton-extensions/sdk": "file:../extensions-sdk-1.0.0-beta.0/package-archives/ableton-extensions-sdk-1.0.0-beta.0.tgz"
+    "@ableton-extensions/sdk": "file:vendor/ableton-extensions-sdk.tgz"
   },
   "devDependencies": {
-    "@ableton-extensions/cli": "file:../extensions-sdk-1.0.0-beta.0/package-archives/ableton-extensions-cli-1.0.0-beta.0.tgz",
+    "@ableton-extensions/cli": "file:vendor/ableton-extensions-cli.tgz",
     "@types/node": "^24.1.0",
     "esbuild": "0.28.0",
     "jspdf": "^2.5.2",

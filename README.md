@@ -30,13 +30,13 @@ Download the latest **`.ablx`** from the [**Releases** page](https://github.com/
 
 1. In Ableton Live, open **Preferences → Extensions** (with Developer Mode **off**, so Live manages the extension).
 2. Drag the `.ablx` onto that page.
-3. Right-click any MIDI clip → **Show Chart…**.
+3. Right-click any MIDI clip → **Extensions → Show Chart**.
 
 Requires **Ableton Live 12.4 or newer with Extensions** (the Extensions feature is currently in the Live 12.4 beta; tested on 12.4.5b3). Prefer to build it yourself? See [Build from source](#build-from-source).
 
 ## Usage
 
-1. In Ableton Live, **right-click a MIDI clip** and choose **Extensions → Show Chart…**.
+1. In Ableton Live, **right-click a MIDI clip** and choose **Extensions → Show Chart**.
 2. The clip opens as sheet music in a window. From the toolbar at the top:
    - **Transpose ▾** — pick an instrument preset (Concert/C, Eb Alto Sax, Bb Trumpet/Clarinet, …) or dial in any number of semitones, and choose the clef or **Grand staff**. The key signature follows automatically.
    - **Quantize ▾** — the rhythmic grid, auto-detected from the clip; override (1/4–1/32) if needed.
@@ -50,34 +50,32 @@ Editing is delegated to Live's piano roll — adjust notes there, then re-open t
 
 - **Ableton Live 12.4 or newer with Extensions enabled** — the Extensions feature is currently in the Live 12.4 beta (tested on 12.4.5b3).
 - **Node.js ≥ 24**.
-- The **Ableton Extensions SDK (beta)** — distributed by Ableton and **not** included in this repository (see Setup).
+- The **Ableton Extensions SDK (beta)** — distributed by Ableton and **not** included in this repository (see [Build from source](#build-from-source)).
 
 ## Build from source
 
-This project depends on the Ableton Extensions SDK, which is not published to npm and is not bundled here. Obtain it from Ableton, then make it available to the project:
+This project depends on the Ableton Extensions SDK, which is not published to npm and is not bundled here. Obtain it from Ableton, then:
 
 1. Download and unpack the Extensions SDK (e.g. `extensions-sdk-1.0.0-beta.0`).
-2. Place it as a **sibling** of this repository, so the tarballs resolve at `../extensions-sdk-1.0.0-beta.0/package-archives/`. (Alternatively, edit the `@ableton-extensions/*` `file:` paths in `package.json` to point at your copy.)
-3. Install dependencies:
+2. Tell the project where it is and install:
    ```bash
-   npm install
+   cp .env.example .env
+   # set ABLETON_SDK_PATH to your unpacked SDK, e.g. /path/to/extensions-sdk-1.0.0-beta.0
+   npm run setup
    ```
+   `npm run setup` copies the SDK tarballs into `./vendor/` (git-ignored) and installs all dependencies. Set the path once and you never edit `package.json`.
 
 ## Develop
 
 The fastest loop uses Live's Developer Mode and an externally-launched Extension Host:
 
-1. Copy the env template and point it at your Live application:
-   ```bash
-   cp .env.example .env
-   # then set EXTENSION_HOST_PATH, e.g. /Applications/Ableton Live 12 Suite.app
-   ```
+1. In your `.env` (created during setup), set **`EXTENSION_HOST_PATH`** to your Live application, e.g. `/Applications/Ableton Live 12 Suite.app`.
 2. In Live: **Preferences → Extensions → enable Developer Mode**.
 3. Build and launch the host (leave it running):
    ```bash
    npm start
    ```
-4. Right-click a MIDI clip → **Show Chart…**.
+4. Right-click a MIDI clip → **Extensions → Show Chart**.
 
 ## Build & package
 
