@@ -1,6 +1,6 @@
 {
   "name": "ableton-sheet-music-extension",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "View an Ableton Live MIDI clip as sheet music, transpose it for any instrument, and export MusicXML / PDF / PNG.",
   "license": "MIT",
   "main": "dist/extension.js",
