@@ -1,0 +1,172 @@
+import * as fs from "node:fs/promises";
+import * as path from "node:path";
+import { execFile } from "node:child_process";
+import {
+  initialize,
+  MidiClip,
+  type ActivationContext,
+  type Handle,
+} from "@ableton-extensions/sdk";
+
+import bundledHtml from "../ui/dist/index.html";
+import { toNoteModels } from "./notation/notes";
+import { fingerprintNotes } from "./notation/fingerprint";
+import { keyToFifths } from "./notation/key";
+import { detectGrid } from "./notation/durations";
+import { INSTRUMENTS } from "./notation/transpose";
+import type { NoteModel } from "./notation/types";
+import {
+  injectPayload,
+  type ChartPayload,
+  type ChartResult,
+  type ChartSettings,
+} from "./payload";
+
+const DEFAULT_SETTINGS: ChartSettings = {
+  instrument: "Concert / C",
+  quantizeGrid: "1/16",
+  formats: ["musicxml", "pdf"],
+};
+
+/** Reveal a saved file in Finder (best-effort; macOS `open -R`). */
+function revealInFinder(filePath: string): void {
+  try {
+    execFile("open", ["-R", filePath], () => {});
+  } catch (err) {
+    console.error("Sheet Music: couldn't reveal the file in Finder.", err);
+  }
+}
+
+export function activate(activation: ActivationContext) {
+  const ctx = initialize(activation, "1.0.0");
+
+  const storageDir = () => {
+    const d = ctx.environment.storageDirectory;
+    if (!d) throw new Error("No storage directory available.");
+    return d;
+  };
+  const tempDir = () => {
+    const d = ctx.environment.tempDirectory;
+    if (!d) throw new Error("No temp directory available.");
+    return d;
+  };
+
+  async function readJson<T>(file: string, fallback: T): Promise<T> {
+    try {
+      return JSON.parse(await fs.readFile(file, "utf-8")) as T;
+    } catch {
+      return fallback;
+    }
+  }
+
+  /** Read the clip + song context needed to build a chart payload. */
+  function readClip(handle: Handle): {
+    clipName: string;
+    notes: NoteModel[];
+    concertKeyFifths: number;
+    tempo: number;
+    timeSig: { numerator: number; denominator: number };
+    fingerprint: string;
+  } {
+    const clip = ctx.getObjectFromHandle(handle, MidiClip);
+    const notes = toNoteModels(clip.notes);
+    const song = ctx.application.song;
+    const scene = song.scenes[0];
+    // The SDK returns BigInt at runtime for numeric fields (despite the .d.ts
+    // declaring `number`), so coerce every numeric read with Number(). A scene's
+    // signature is -1 when it follows the (SDK-inaccessible) global signature, so
+    // treat any non-positive value as "unset" and default to 4/4.
+    const sigNum = Number(scene?.signatureNumerator);
+    const sigDen = Number(scene?.signatureDenominator);
+    return {
+      clipName: clip.name,
+      notes,
+      concertKeyFifths: keyToFifths(Number(song.rootNote), song.scaleName),
+      tempo: Number(song.tempo),
+      timeSig: {
+        numerator: sigNum > 0 ? sigNum : 4,
+        denominator: sigDen > 0 ? sigDen : 4,
+      },
+      fingerprint: fingerprintNotes(notes),
+    };
+  }
+
+  async function writeFiles(files: ChartResult["files"]): Promise<string[]> {
+    const dir = path.join(storageDir(), "charts");
+    await fs.mkdir(dir, { recursive: true });
+    const written: string[] = [];
+    for (const f of files) {
+      const dest = path.join(dir, f.name);
+      if (f.encoding === "base64") await fs.writeFile(dest, Buffer.from(f.data, "base64"));
+      else await fs.writeFile(dest, f.data, "utf-8");
+      written.push(dest);
+    }
+    return written;
+  }
+
+  async function persistSettings(settings: ChartSettings): Promise<void> {
+    await fs.writeFile(path.join(storageDir(), "settings.json"), JSON.stringify(settings, null, 2), "utf-8");
+  }
+
+  async function persistLastExport(clipName: string, fingerprint: string, formats: string[]): Promise<void> {
+    const file = path.join(storageDir(), "last-export.json");
+    const map = await readJson<Record<string, { fingerprint: string; ts: string; formats: string[] }>>(file, {});
+    map[clipName] = { fingerprint, ts: new Date().toISOString(), formats };
+    await fs.writeFile(file, JSON.stringify(map, null, 2), "utf-8");
+  }
+
+  // ---- "Show Chart…" (interactive) -------------------------------------------------
+  ctx.commands.registerCommand("sheetMusic.showChart", (arg: unknown) => {
+    void (async () => {
+      try {
+        const clip = readClip(arg as Handle);
+        if (clip.notes.length === 0) {
+          console.log("Sheet Music: clip has no notes — nothing to render.");
+          return;
+        }
+        const settings = await readJson(path.join(storageDir(), "settings.json"), DEFAULT_SETTINGS);
+        const lastExport = await readJson<Record<string, { fingerprint: string }>>(
+          path.join(storageDir(), "last-export.json"),
+          {},
+        );
+        const payload: ChartPayload = {
+          clipName: clip.clipName,
+          notes: clip.notes,
+          concertKeyFifths: clip.concertKeyFifths,
+          tempo: clip.tempo,
+          timeSig: clip.timeSig,
+          quantizeGrid: detectGrid(clip.notes),
+          instruments: INSTRUMENTS,
+          settings,
+          fingerprint: clip.fingerprint,
+          lastExportFingerprint: lastExport[clip.clipName]?.fingerprint ?? null,
+          provenance: {
+            clipName: clip.clipName,
+            tempo: clip.tempo,
+            concertKeyFifths: clip.concertKeyFifths,
+            fingerprint: clip.fingerprint,
+            generatedAt: new Date().toISOString(),
+          },
+        };
+        const html = injectPayload(bundledHtml, payload);
+        const uiPath = path.join(tempDir(), "chart-ui.html");
+        await fs.writeFile(uiPath, html, "utf-8");
+
+        const raw = await ctx.ui.showModalDialog(`file://${uiPath}`, 900, 640);
+        if (!raw) return; // dialog dismissed without a result
+        const result = JSON.parse(raw) as ChartResult;
+        await persistSettings(result.settings); // remember instrument / grid / format
+        if (result.files.length) {
+          const written = await writeFiles(result.files);
+          await persistLastExport(clip.clipName, result.fingerprint, result.settings.formats);
+          console.log(`Sheet Music: wrote ${written.length} file(s):\n${written.join("\n")}`);
+          revealInFinder(written[0]);
+        }
+      } catch (err) {
+        console.error("Sheet Music: couldn't render that clip — right-click it again.", err);
+      }
+    })();
+  });
+
+  ctx.ui.registerContextMenuAction("MidiClip", "Show Chart…", "sheetMusic.showChart");
+}

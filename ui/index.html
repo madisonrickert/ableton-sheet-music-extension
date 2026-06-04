@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sheet Music</title>
+    <style>
+      :root {
+        --bg: #383838; --panel: #4e4e4e; --accent: #ffa500; --text: #d0d0d0;
+        --border: #2c2c2c; --input: #2c2c2c; --warn: #c8862b;
+        --muted: #9a9a9a; --bar-h: 42px;
+      }
+      * { box-sizing: border-box; }
+      html, body { height: 100%; }
+      body { margin: 0; background: #fff; color: var(--text); font-family: sans-serif; font-size: 13px; }
+
+      /* Shell: slim toolbar, then a white score "paper" that fills the window. */
+      .app { height: 100vh; display: grid; grid-template-rows: var(--bar-h) 1fr; }
+
+      .topbar { display: flex; align-items: center; gap: 10px; padding: 0 10px;
+                background: var(--panel); border-bottom: 1px solid var(--border); }
+      .spacer { flex: 1; }
+
+      #instrument { min-width: 200px; font-weight: 600; }
+      .stepper { display: flex; align-items: center; gap: 4px; }
+      .stepper #semitones { width: 50px; text-align: center; }
+      .stepper .unit { color: var(--muted); }
+
+      select, input { background: var(--input); color: var(--text); border: 1px solid var(--border); padding: 3px 6px; font: inherit; }
+
+      .ghost { background: transparent; color: var(--text); border: 1px solid var(--border);
+               border-radius: 10px; padding: 4px 10px; cursor: pointer; font: inherit; }
+      .icon { width: 28px; padding: 4px 0; text-align: center; }
+      #closeBtn { background: #d64541; color: #fff; border-color: #b73a36; font-weight: 700; }
+      #closeBtn:hover { background: #e0564f; }
+      .exportFmt { width: 100%; text-align: left; }
+      .pill { background: var(--accent); color: #000; border: none; padding: 6px 14px; border-radius: 12px; cursor: pointer; font: inherit; }
+      .pill.primary { width: 100%; margin-top: 6px; }
+
+      /* White score paper fills all remaining height and scrolls. */
+      .score-scroll { overflow: auto; background: #fff; padding: 18px 20px; }
+      #score { background: #fff; }
+      .caption { display: block; margin-top: 16px; color: #9a9a9a; font-size: 11px; }
+
+      .banner { padding: 6px 12px; background: var(--warn); color: #000; font-weight: 600; }
+
+      /* Popovers drop from the toolbar and float over the score (never reflow it). */
+      .export-wrap, .menu-wrap { position: relative; }
+      .popover { position: absolute; top: calc(100% + 6px); right: 0; z-index: 10;
+                 background: var(--panel); color: var(--text); border: 1px solid var(--border);
+                 border-radius: 8px; padding: 10px; display: flex; flex-direction: column; gap: 6px;
+                 box-shadow: 0 6px 18px rgba(0,0,0,.5); min-width: 190px; }
+      .popover[hidden] { display: none; }   /* make the hidden attribute actually hide it */
+      .popover--left { left: 0; right: auto; } /* anchor under a left-aligned toolbar menu */
+      .popover label { display: flex; align-items: center; gap: 6px; }
+      .tsig span { display: inline-flex; align-items: center; gap: 4px; }
+      .tsig input { width: 44px; }
+      .auto-note { color: var(--muted); font-style: italic; font-size: 11px; }
+    </style>
+  </head>
+  <body>
+    <script id="chart-payload" type="application/json">__CHART_PAYLOAD_JSON__</script>
+
+    <div class="app">
+      <header class="topbar">
+        <div class="menu-wrap">
+          <button type="button" id="transposeToggle" class="ghost" aria-haspopup="true" aria-expanded="false">Transpose ▾</button>
+          <div id="transposePanel" class="popover popover--left" hidden>
+            <label>Instrument
+              <select id="instrument" aria-label="Instrument"></select>
+            </label>
+            <label>Transpose
+              <span class="stepper">
+                <button type="button" id="semiDown" class="ghost icon" aria-label="Down a semitone">–</button>
+                <input id="semitones" type="number" step="1" value="0" inputmode="numeric" aria-label="Transpose in semitones" />
+                <button type="button" id="semiUp" class="ghost icon" aria-label="Up a semitone">+</button>
+                <span class="unit">st</span>
+              </span>
+            </label>
+            <label>Clef
+              <select id="clef" aria-label="Clef">
+                <option value="treble">Treble</option>
+                <option value="bass">Bass</option>
+                <option value="alto">Alto</option>
+                <option value="tenor">Tenor</option>
+                <option value="grand">Grand staff</option>
+              </select>
+            </label>
+          </div>
+        </div>
+
+        <span class="spacer"></span>
+
+        <div class="menu-wrap">
+          <button type="button" id="quantizeToggle" class="ghost" aria-haspopup="true" aria-expanded="false">Quantize ▾</button>
+          <div id="quantizePanel" class="popover" hidden>
+            <label>Quantize
+              <select id="grid">
+                <option value="1/4">1/4</option>
+                <option value="1/8">1/8</option>
+                <option value="1/16">1/16</option>
+                <option value="1/32">1/32</option>
+              </select>
+            </label>
+            <span class="auto-note">Auto-detected from the clip.</span>
+          </div>
+        </div>
+
+        <div class="menu-wrap">
+          <button type="button" id="timeToggle" class="ghost" aria-haspopup="true" aria-expanded="false">Time ▾</button>
+          <div id="timePanel" class="popover" hidden>
+            <label class="tsig">Time signature
+              <span><input id="tsNum" type="number" min="1" max="32" /> / <input id="tsDen" type="number" min="1" max="32" /></span>
+            </label>
+            <span class="auto-note">Auto-detected — override if Live's signature wasn't 4/4.</span>
+          </div>
+        </div>
+
+        <div class="export-wrap">
+          <button type="button" id="exportToggle" class="ghost" aria-haspopup="true" aria-expanded="false">Export ▾</button>
+          <div id="exportPanel" class="popover" hidden>
+            <button type="button" class="exportFmt ghost" data-fmt="musicxml">MusicXML</button>
+            <button type="button" class="exportFmt ghost" data-fmt="pdf">PDF</button>
+            <button type="button" class="exportFmt ghost" data-fmt="png">PNG</button>
+            <span class="auto-note">Saves the file and reveals it in Finder.</span>
+          </div>
+        </div>
+
+        <button type="button" id="closeBtn" class="ghost icon" title="Close" aria-label="Close">✕</button>
+      </header>
+
+      <main id="scoreScroll" class="score-scroll">
+        <div id="score"></div>
+        <span id="status" class="caption"></span>
+      </main>
+    </div>
+
+    <script type="module" src="./src/main.ts"></script>
+  </body>
+</html>

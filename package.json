@@ -1,0 +1,37 @@
+{
+  "name": "ableton-sheet-music-extension",
+  "version": "1.0.0",
+  "description": "View an Ableton Live MIDI clip as sheet music, transpose it for any instrument, and export MusicXML / PDF / PNG.",
+  "license": "MIT",
+  "main": "dist/extension.js",
+  "engines": {
+    "node": ">=24.14.1"
+  },
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit && tsc -p ui/tsconfig.json",
+    "build:ui": "vite build",
+    "build:dev": "npm run build:ui && npm run typecheck && tsx build.ts",
+    "build": "npm run build:ui && npm run typecheck && tsx build.ts --production",
+    "start": "npm run build:dev && extensions-cli run --storage-directory \"$PWD/.dev/storage\" --temp-directory \"$PWD/.dev/temp\"",
+    "package": "npm run build && extensions-cli package",
+    "dev:ui": "vite"
+  },
+  "dependencies": {
+    "@ableton-extensions/sdk": "file:../extensions-sdk-1.0.0-beta.0/package-archives/ableton-extensions-sdk-1.0.0-beta.0.tgz"
+  },
+  "devDependencies": {
+    "@ableton-extensions/cli": "file:../extensions-sdk-1.0.0-beta.0/package-archives/ableton-extensions-cli-1.0.0-beta.0.tgz",
+    "@types/node": "^24.1.0",
+    "esbuild": "0.28.0",
+    "jspdf": "^2.5.2",
+    "opensheetmusicdisplay": "^1.9.0",
+    "svg2pdf.js": "^2.7.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.9.3",
+    "vite": "^6.0.0",
+    "vite-plugin-singlefile": "^2.1.0",
+    "vitest": "^2.1.0"
+  }
+}
