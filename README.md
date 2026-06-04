@@ -50,7 +50,7 @@ Editing is delegated to Live's piano roll — adjust notes there, then re-open t
 
 ## Requirements
 
-- **Ableton Live 12.4 or newer with Extensions enabled** — the Extensions feature is currently in the Live 12.4 beta (tested on 12.4.5b3).
+- **Ableton Live 12.4.5 or newer with Extensions enabled** — the Extensions feature is currently in the Live 12.4.5 beta (tested on 12.4.5b3).
 - **Node.js ≥ 24**.
 - The **Ableton Extensions SDK (beta)** — distributed by Ableton and **not** included in this repository (see [Build from source](#build-from-source)).
 
