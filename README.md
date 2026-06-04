@@ -34,6 +34,18 @@ Download the latest **`.ablx`** from the [**Releases** page](https://github.com/
 
 Requires **Ableton Live 12.4 or newer with Extensions** (the Extensions feature is currently in the Live 12.4 beta; tested on 12.4.5b3). Prefer to build it yourself? See [Build from source](#build-from-source).
 
+## Usage
+
+1. In Ableton Live, **right-click a MIDI clip** and choose **Extensions → Show Chart…**.
+2. The clip opens as sheet music in a window. From the toolbar at the top:
+   - **Transpose ▾** — pick an instrument preset (Concert/C, Eb Alto Sax, Bb Trumpet/Clarinet, …) or dial in any number of semitones, and choose the clef or **Grand staff**. The key signature follows automatically.
+   - **Quantize ▾** — the rhythmic grid, auto-detected from the clip; override (1/4–1/32) if needed.
+   - **Time ▾** — override the time signature (defaults to 4/4).
+   - **Export ▾** — choose **MusicXML**, **PDF**, or **PNG**. The file is saved and revealed in Finder, and the window closes.
+   - **✕** (red, top-right) — close without exporting.
+
+Editing is delegated to Live's piano roll — adjust notes there, then re-open the chart to see the update.
+
 ## Requirements
 
 - **Ableton Live 12.4 or newer with Extensions enabled** — the Extensions feature is currently in the Live 12.4 beta (tested on 12.4.5b3).
