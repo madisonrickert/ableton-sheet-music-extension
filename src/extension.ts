@@ -15,6 +15,7 @@ import { keyToFifths } from "./notation/key";
 import { detectGrid } from "./notation/durations";
 import { INSTRUMENTS } from "./notation/transpose";
 import type { NoteModel } from "./notation/types";
+import { fileUrl } from "./file-url";
 import {
   injectPayload,
   type ChartPayload,
@@ -152,7 +153,7 @@ export function activate(activation: ActivationContext) {
         const uiPath = path.join(tempDir(), "chart-ui.html");
         await fs.writeFile(uiPath, html, "utf-8");
 
-        const raw = await ctx.ui.showModalDialog(`file://${uiPath}`, 900, 640);
+        const raw = await ctx.ui.showModalDialog(fileUrl(uiPath), 900, 640);
         if (!raw) return; // dialog dismissed without a result
         const result = JSON.parse(raw) as ChartResult;
         await persistSettings(result.settings); // remember instrument / grid / format
