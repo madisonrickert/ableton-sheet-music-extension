@@ -4,7 +4,7 @@
 
 View any MIDI clip in Ableton Live as readable sheet music — transpose it for any instrument and export **MusicXML**, **PDF**, or **PNG**. Built on the [Ableton Live Extensions SDK](https://www.ableton.com/en/live/extensions) (beta).
 
-![The extension showing a MIDI clip rendered as notation, with Transpose, Quantize, Time, and Export menus](docs/screenshot.png)
+![Ableton Sheet Music Extension: see any MIDI clip as notation, transpose it, and export MusicXML, PDF, or PNG](docs/social-preview.png)
 
 ## Features
 
@@ -23,6 +23,8 @@ View any MIDI clip in Ableton Live as readable sheet music — transpose it for 
 - The Node extension writes the returned file to its sandboxed storage directory and reveals it in Finder.
 
 The notation core (`src/notation/`) has no dependency on the SDK or the DOM, so it is fully unit-testable.
+
+![The extension window: a MIDI clip rendered as sheet music, with the Transpose, Quantize, Time, and Export menus](docs/screenshot.png)
 
 ## Install
 
