@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/madisonrickert/ableton-sheet-music-extension/actions/workflows/ci.yml/badge.svg)](https://github.com/madisonrickert/ableton-sheet-music-extension/actions/workflows/ci.yml)
 
-View any MIDI clip in Ableton Live as readable sheet music — transpose it for any instrument and export **MusicXML**, **PDF**, or **PNG**. Built on the [Ableton Live Extensions SDK](https://github.com/Ableton/extensions-sdk) (beta).
+View any MIDI clip in Ableton Live as readable sheet music — transpose it for any instrument and export **MusicXML**, **PDF**, or **PNG**. Built on the [Ableton Live Extensions SDK](https://www.ableton.com/en/live/extensions) (beta).
 
 ![The extension showing a MIDI clip rendered as notation, with Transpose, Quantize, Time, and Export menus](docs/screenshot.png)
 
