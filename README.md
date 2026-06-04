@@ -82,11 +82,12 @@ The fastest loop uses Live's Developer Mode and an externally-launched Extension
 ## Build & package
 
 ```bash
-npm run build      # production bundle
-npm run package    # produces an installable .ablx
+npm run build               # production bundle → dist/extension.js
+npm run package             # build + package the installable → release/Sheet-Music-<version>.ablx
+npm run package -- --reveal # same, then reveal the .ablx in Finder (macOS)
 ```
 
-Install the `.ablx` by dropping it onto Live's **Extensions** preferences (with Developer Mode **off**, so Live manages the host).
+`npm run package` writes the installable to `release/` (git-ignored), clearing any older `.ablx` first so there's only ever the current one. Install it by dropping the `.ablx` onto Live's **Extensions** preferences (with Developer Mode **off**, so Live manages the host).
 
 ## Test
 

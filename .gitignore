@@ -2,6 +2,7 @@
 node_modules/
 dist/
 ui/dist/
+release/
 
 *.log
 *.ablx
