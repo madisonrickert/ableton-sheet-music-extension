@@ -24,13 +24,23 @@ View any MIDI clip in Ableton Live as readable sheet music — transpose it for 
 
 The notation core (`src/notation/`) has no dependency on the SDK or the DOM, so it is fully unit-testable.
 
+## Install
+
+Download the latest **`.ablx`** from the [**Releases** page](https://github.com/madisonrickert/ableton-sheet-music-extension/releases/latest), then:
+
+1. In Ableton Live, open **Preferences → Extensions** (with Developer Mode **off**, so Live manages the extension).
+2. Drag the `.ablx` onto that page.
+3. Right-click any MIDI clip → **Show Chart…**.
+
+Requires **Ableton Live 12.4 or newer with Extensions** (the Extensions feature is currently in the Live 12.4 beta; tested on 12.4.5b3). Prefer to build it yourself? See [Build from source](#build-from-source).
+
 ## Requirements
 
-- **Ableton Live 12.4+** with Extensions support (developed against the 12.4.5 beta).
+- **Ableton Live 12.4 or newer with Extensions enabled** — the Extensions feature is currently in the Live 12.4 beta (tested on 12.4.5b3).
 - **Node.js ≥ 24**.
 - The **Ableton Extensions SDK (beta)** — distributed by Ableton and **not** included in this repository (see Setup).
 
-## Setup
+## Build from source
 
 This project depends on the Ableton Extensions SDK, which is not published to npm and is not bundled here. Obtain it from Ableton, then make it available to the project:
 
@@ -72,15 +82,3 @@ Install the `.ablx` by dropping it onto Live's **Extensions** preferences (with 
 npm test           # unit tests (vitest)
 npm run typecheck  # type-check the extension and the webview
 ```
-
-## Tech stack
-
-TypeScript · Ableton Extensions SDK · OpenSheetMusicDisplay · jsPDF + svg2pdf.js · esbuild · Vite · vitest
-
-## SDK feedback
-
-Notes and feature requests for Ableton on the Extensions SDK beta, gathered while building this: [`docs/ableton-sdk-feedback.md`](docs/ableton-sdk-feedback.md).
-
-## License
-
-[MIT](LICENSE) © 2026 Madison Rickert
