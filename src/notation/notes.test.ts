@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { toNoteModels } from "../src/notation/notes";
+import { toNoteModels } from "./notes";
 
 describe("toNoteModels", () => {
   it("maps NoteDescription fields and sorts by start then pitch", () => {

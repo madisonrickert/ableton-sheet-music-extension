@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { injectPayload, escapeForScriptJson, PAYLOAD_TOKEN, type ChartPayload } from "../src/payload";
-import { INSTRUMENTS } from "../src/notation/transpose";
+import { injectPayload, escapeForScriptJson, PAYLOAD_TOKEN, type ChartPayload } from "./payload";
+import { INSTRUMENTS } from "./notation/transpose";
 
 const payload: ChartPayload = {
   clipName: "Verse <Sax>",

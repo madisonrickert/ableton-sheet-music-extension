@@ -11,6 +11,7 @@
   "scripts": {
     "setup": "node scripts/setup-sdk.mjs && npm install",
     "test": "vitest run",
+    "test:watch": "vitest",
     "typecheck": "tsc --noEmit && tsc -p ui/tsconfig.json",
     "build:ui": "vite build",
     "build:dev": "npm run build:ui && npm run typecheck && tsx build.ts",

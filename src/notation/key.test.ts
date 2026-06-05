@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { keyToFifths } from "../src/notation/key";
+import { keyToFifths } from "./key";
 
 describe("keyToFifths", () => {
   it("C major -> 0", () => {

@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { fileUrl } from "../src/file-url";
+import { fileUrl } from "./file-url";
 
 describe("fileUrl", () => {
   // Regression: a Live-managed extension's temp directory lives under

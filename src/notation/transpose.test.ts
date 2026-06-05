@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { INSTRUMENTS, getProfile, normalizeFifths, transpose } from "../src/notation/transpose";
-import type { NoteModel } from "../src/notation/types";
+import { INSTRUMENTS, getProfile, normalizeFifths, transpose } from "./transpose";
+import type { NoteModel } from "./types";
 
 describe("normalizeFifths", () => {
   it("reduces to the range [-5, 6]", () => {

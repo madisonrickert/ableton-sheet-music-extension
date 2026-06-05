@@ -1,4 +1,8 @@
 {
+  // Bundler resolution matches our toolchain (esbuild build + Vitest), so modules
+  // can use extensionless relative imports. `tsc --noEmit` (in `npm run typecheck`)
+  // type-checks everything under src/, including the colocated *.test.ts files;
+  // esbuild bundles only what src/extension.ts imports, so tests never reach dist.
   "compilerOptions": {
     "module": "esnext",
     "target": "esnext",
@@ -9,5 +13,5 @@
     "skipLibCheck": true,
     "types": ["node"]
   },
-  "include": ["src/**/*", "test/**/*"]
+  "include": ["src/**/*"]
 }

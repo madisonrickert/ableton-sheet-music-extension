@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { notesToMusicXML } from "../src/notation/musicxml";
-import type { NoteModel } from "../src/notation/types";
+import { notesToMusicXML } from "./musicxml";
+import type { NoteModel } from "./types";
 
 const opts = (over: Partial<Parameters<typeof notesToMusicXML>[1]> = {}) => ({
   tempo: 120,

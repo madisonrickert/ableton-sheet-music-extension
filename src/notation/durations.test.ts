@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { gridDivisions, buildNoteValueTable, decomposeDuration, detectGrid } from "../src/notation/durations";
-import type { NoteModel } from "../src/notation/types";
+import { gridDivisions, buildNoteValueTable, decomposeDuration, detectGrid } from "./durations";
+import type { NoteModel } from "./types";
 
 describe("gridDivisions", () => {
   it("maps grids to units-per-quarter", () => {

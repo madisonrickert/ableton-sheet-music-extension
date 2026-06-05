@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { detectStaff } from "../src/notation/clef";
-import type { NoteModel } from "../src/notation/types";
+import { detectStaff } from "./clef";
+import type { NoteModel } from "./types";
 
 const n = (midi: number): NoteModel => ({ midi, startBeats: 0, durationBeats: 1 });
 

@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { fingerprintNotes } from "../src/notation/fingerprint";
-import type { NoteModel } from "../src/notation/types";
+import { fingerprintNotes } from "./fingerprint";
+import type { NoteModel } from "./types";
 
 const a: NoteModel[] = [
   { midi: 60, startBeats: 0, durationBeats: 1 },
