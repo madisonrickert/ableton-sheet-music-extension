@@ -2,24 +2,25 @@
 
 [![CI](https://github.com/madisonrickert/ableton-sheet-music-extension/actions/workflows/ci.yml/badge.svg)](https://github.com/madisonrickert/ableton-sheet-music-extension/actions/workflows/ci.yml)
 
-View any MIDI clip in Ableton Live as readable sheet music — transpose it for any instrument and export **MusicXML**, **PDF**, or **PNG**. Built on the [Ableton Live Extensions SDK](https://www.ableton.com/en/live/extensions) (beta).
+View any MIDI clip in Ableton Live as readable sheet music. Transpose it for any instrument and export **MusicXML**, **PDF**, or **PNG**. Built on the [Ableton Live Extensions SDK](https://www.ableton.com/en/live/extensions) (beta).
 
 ![Ableton Sheet Music Extension: see any MIDI clip as notation, transpose it, and export MusicXML, PDF, or PNG](docs/social-preview.png)
 
 ## Features
 
-- **Notation view** — renders a selected MIDI clip as sheet music with [OpenSheetMusicDisplay](https://opensheetmusicdisplay.org/).
-- **Transposition** — choose an instrument preset (Concert/C, Eb Alto Sax, Bb Trumpet/Clarinet, Bb Tenor Sax, Eb Baritone Sax, F Horn) or transpose by any number of semitones. The key signature follows automatically.
-- **Smart staff & clef** — auto-detects treble, bass, or a two-staff **grand staff** for piano-range material; override from the Transpose menu.
-- **Smart quantize** — auto-detects the best grid (1/4–1/32) from the clip; override anytime.
-- **Time-signature override** — defaults to 4/4 (the SDK does not expose the project's global signature) with a manual override.
-- **Export** — vector **PDF** (via `svg2pdf.js`), **PNG**, and **MusicXML** (opens cleanly in MuseScore / Dorico). Exports are written to the extension's storage folder and revealed in Finder.
+- **Notation view**: renders a selected MIDI clip as sheet music with [OpenSheetMusicDisplay](https://opensheetmusicdisplay.org/).
+- **Transposition**: choose an instrument preset (Concert / C, plus Bb, Eb, and F instruments like trumpet, sax, and horn) or transpose by any number of semitones. The key signature follows automatically.
+- **Smart staff & clef**: auto-detects treble, bass, or a two-staff **grand staff** for piano-range material; override from the Transpose menu.
+- **Smart quantize**: auto-detects the best grid (1/4–1/32) from the clip; override anytime.
+- **Time-signature override**: defaults to 4/4 (the SDK does not expose the project's global signature); set it manually when needed.
+- **Export**: vector **PDF**, **PNG**, and **MusicXML** (opens cleanly in MuseScore / Dorico). Exports are written to the extension's storage folder and revealed in Finder.
+- **Editing**: delegated to Live's piano roll. Adjust notes there, then re-open the chart to refresh.
 
 ## How it works
 
 - A right-click action on a MIDI clip reads the clip's notes and opens a modal webview.
 - Pure, unit-tested TypeScript modules convert notes → MusicXML: quantization, chord grouping, ties across barlines, instrument transposition, key signatures, and grand-staff splitting.
-- The webview renders the MusicXML with OpenSheetMusicDisplay (SVG backend) and produces exports — vector PDF, PNG, and MusicXML — entirely client-side.
+- The webview renders the MusicXML with OpenSheetMusicDisplay (SVG backend) and produces its exports (vector PDF, PNG, and MusicXML) entirely client-side.
 - The Node extension writes the returned file to its sandboxed storage directory and reveals it in Finder.
 
 The notation core (`src/notation/`) has no dependency on the SDK or the DOM, so it is fully unit-testable.
@@ -34,30 +35,7 @@ Download the latest **`.ablx`** from the [**Releases** page](https://github.com/
 2. Drag the `.ablx` onto that page.
 3. Right-click any MIDI clip → **Extensions → Show Chart**.
 
-Requires **Ableton Live 12.4.5 or newer with Extensions** (currently in the Live 12.4.5 beta; tested on 12.4.5b3). Prefer to build it yourself? See [Build from source](#build-from-source).
-
-## Usage
-
-1. In Ableton Live, **right-click a MIDI clip** and choose **Extensions → Show Chart**.
-2. The clip opens as sheet music in a window. From the toolbar at the top:
-   - **Transpose ▾** — pick an instrument preset (Concert/C, Eb Alto Sax, Bb Trumpet/Clarinet, …) or dial in any number of semitones, and choose the clef or **Grand staff**. The key signature follows automatically.
-   - **Quantize ▾** — the rhythmic grid, auto-detected from the clip; override (1/4–1/32) if needed.
-   - **Time ▾** — override the time signature (defaults to 4/4).
-   - **Export ▾** — choose **MusicXML**, **PDF**, or **PNG**. The file is saved and revealed in Finder, and the window closes.
-   - **✕** (red, top-right) — close without exporting.
-
-Editing is delegated to Live's piano roll — adjust notes there, then re-open the chart to see the update.
-
-## Requirements
-
-**To install and use the extension** — only Ableton Live:
-
-- **Ableton Live 12.4.5 or newer with Extensions enabled** — the Extensions feature is currently in the Live 12.4.5 beta (tested on 12.4.5b3). The `.ablx` is self-contained and runs inside Live's Extension Host, so you do **not** need Node.js or the SDK installed to use it.
-
-**To build from source** (development only):
-
-- **Node.js ≥ 24**.
-- The **Ableton Extensions SDK (beta)** — distributed by Ableton and **not** included in this repository (see [Build from source](#build-from-source)).
+Requires **Ableton Live 12.4.5 or newer with Extensions** (currently in the Live 12.4.5 beta; tested on 12.4.5b3). The `.ablx` is self-contained and runs inside Live's Extension Host, so you do **not** need Node.js or the SDK installed to use it. Prefer to build it yourself? See [Build from source](#build-from-source).
 
 ## Build from source
 
@@ -71,6 +49,8 @@ This project depends on the Ableton Extensions SDK, which is not published to np
    npm run setup
    ```
    `npm run setup` copies the SDK tarballs into `./vendor/` (git-ignored) and installs all dependencies. Set the path once and you never edit `package.json`.
+
+Building from source needs **Node.js ≥ 24** and the **Ableton Extensions SDK (beta)**, distributed by Ableton and **not** included in this repository.
 
 ## Develop
 
