@@ -1,6 +1,11 @@
 # Ableton Sheet Music Extension
 
 [![CI](https://github.com/madisonrickert/ableton-sheet-music-extension/actions/workflows/ci.yml/badge.svg)](https://github.com/madisonrickert/ableton-sheet-music-extension/actions/workflows/ci.yml)
+[![Latest release](https://img.shields.io/github/v/release/madisonrickert/ableton-sheet-music-extension?label=release)](https://github.com/madisonrickert/ableton-sheet-music-extension/releases/latest)
+[![Downloads](https://img.shields.io/github/downloads/madisonrickert/ableton-sheet-music-extension/total)](https://github.com/madisonrickert/ableton-sheet-music-extension/releases)
+[![License: MIT](https://img.shields.io/github/license/madisonrickert/ableton-sheet-music-extension)](LICENSE)
+![Ableton Live 12.4.5+](https://img.shields.io/badge/Ableton%20Live-12.4.5%2B-black)
+[![Stars](https://img.shields.io/github/stars/madisonrickert/ableton-sheet-music-extension?style=flat)](https://github.com/madisonrickert/ableton-sheet-music-extension/stargazers)
 
 View any MIDI clip in Ableton Live as readable sheet music. Transpose it for any instrument and export **MusicXML**, **PDF**, or **PNG**. Built on the [Ableton Live Extensions SDK](https://www.ableton.com/en/live/extensions) (beta).
 
