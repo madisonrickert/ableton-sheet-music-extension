@@ -47,6 +47,7 @@ export interface ChartResult {
 }
 
 export const PAYLOAD_TOKEN = "__CHART_PAYLOAD_JSON__";
+export const LICENSES_TOKEN = "__THIRD_PARTY_LICENSES_JSON__";
 
 /**
  * Escape `<` so the JSON cannot break out of its <script type="application/json"> host
@@ -60,4 +61,15 @@ export function escapeForScriptJson(json: string): string {
 export function injectPayload(html: string, payload: ChartPayload): string {
   if (!html.includes(PAYLOAD_TOKEN)) throw new Error("payload token not found in webview HTML");
   return html.replace(PAYLOAD_TOKEN, escapeForScriptJson(JSON.stringify(payload)));
+}
+
+/**
+ * Replace the licenses token with the build-generated third-party notices, encoded
+ * as a JSON string so the (multi-line, punctuation-heavy) text can't break out of its
+ * <script type="application/json"> host. The webview JSON.parses it and renders it as
+ * textContent — never innerHTML — so there is no HTML-injection surface.
+ */
+export function injectLicenses(html: string, notices: string): string {
+  if (!html.includes(LICENSES_TOKEN)) throw new Error("licenses token not found in webview HTML");
+  return html.replace(LICENSES_TOKEN, escapeForScriptJson(JSON.stringify(notices)));
 }

@@ -266,8 +266,32 @@ for (const [toggleId, panelId] of POPOVERS) {
   panel.addEventListener("click", (e) => e.stopPropagation());
 }
 document.addEventListener("click", closeAllPopovers);
+
+// ---- Credits overlay (info button → full-screen credits with embedded licenses) ----
+const creditsOverlay = $<HTMLDivElement>("credits");
+// extension.ts injects the build-generated notices as a JSON string at launch.
+// In `dev:ui` the token is never replaced, so fall back instead of crashing.
+try {
+  const raw = $<HTMLScriptElement>("licenses-payload").textContent ?? "";
+  $<HTMLPreElement>("licensesText").textContent = JSON.parse(raw) as string;
+} catch {
+  $<HTMLPreElement>("licensesText").textContent =
+    "Open-source license notices are generated at build time.";
+}
+$<HTMLButtonElement>("infoBtn").addEventListener("click", (e) => {
+  e.stopPropagation();
+  closeAllPopovers();
+  creditsOverlay.hidden = false;
+});
+$<HTMLButtonElement>("creditsClose").addEventListener("click", () => {
+  creditsOverlay.hidden = true;
+});
+
 document.addEventListener("keydown", (e) => {
-  if (e.key === "Escape") closeAllPopovers();
+  if (e.key === "Escape") {
+    closeAllPopovers();
+    creditsOverlay.hidden = true;
+  }
 });
 
 // ---- Control wiring ----

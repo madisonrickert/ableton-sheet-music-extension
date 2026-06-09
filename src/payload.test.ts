@@ -1,5 +1,12 @@
 import { describe, it, expect } from "vitest";
-import { injectPayload, escapeForScriptJson, PAYLOAD_TOKEN, type ChartPayload } from "./payload";
+import {
+  injectPayload,
+  injectLicenses,
+  escapeForScriptJson,
+  PAYLOAD_TOKEN,
+  LICENSES_TOKEN,
+  type ChartPayload,
+} from "./payload";
 import { INSTRUMENTS } from "./notation/transpose";
 
 const payload: ChartPayload = {
@@ -34,5 +41,23 @@ describe("injectPayload", () => {
 
   it("throws when the token is missing", () => {
     expect(() => injectPayload("<html></html>", payload)).toThrow(/token/i);
+  });
+});
+
+describe("injectLicenses", () => {
+  const html = `<html><body><script id="licenses-payload" type="application/json">${LICENSES_TOKEN}</script></body></html>`;
+  // License texts are multi-line and could, in theory, contain a literal </script>.
+  const notices = "OSMD — BSD-3-Clause\nCopyright 2019 PhonicScore\n<not a </script> tag>\n";
+
+  it("replaces the token and round-trips the notices text via JSON.parse", () => {
+    const result = injectLicenses(html, notices);
+    expect(result).not.toContain(LICENSES_TOKEN);
+    expect(result).not.toContain("</script> tag"); // the < was escaped
+    const json = result.match(/type="application\/json">([\s\S]*?)<\/script>/)![1];
+    expect(JSON.parse(json)).toBe(notices);
+  });
+
+  it("throws when the token is missing", () => {
+    expect(() => injectLicenses("<html></html>", notices)).toThrow(/token/i);
   });
 });

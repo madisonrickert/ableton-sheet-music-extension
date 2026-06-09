@@ -9,10 +9,18 @@
         --bg: #383838; --panel: #4e4e4e; --accent: #ffa500; --text: #d0d0d0;
         --border: #2c2c2c; --input: #2c2c2c; --warn: #c8862b;
         --muted: #9a9a9a; --bar-h: 42px;
+        /* Typography scale (1.25 major third on a 13px base) */
+        --fs-title: 21px; --fs-section: 15px; --fs-body: 13px;
+        --fs-meta: 12px; --fs-eyebrow: 11px; --fs-mono: 11.5px;
+        /* Spacing ladder (4px base) */
+        --sp-1: 4px; --sp-2: 8px; --sp-3: 12px; --sp-4: 16px; --sp-5: 24px;
+        /* Native font stacks */
+        --font-sans: -apple-system, BlinkMacSystemFont, system-ui, "Segoe UI", Roboto, sans-serif;
+        --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
       }
       * { box-sizing: border-box; }
       html, body { height: 100%; }
-      body { margin: 0; background: #fff; color: var(--text); font-family: sans-serif; font-size: 13px; }
+      body { margin: 0; background: #fff; color: var(--text); font-family: var(--font-sans); font-size: 13px; -webkit-font-smoothing: antialiased; }
 
       /* Shell: slim toolbar, then a white score "paper" that fills the window. */
       .app { height: 100vh; display: grid; grid-template-rows: var(--bar-h) 1fr; }
@@ -56,10 +64,44 @@
       .tsig span { display: inline-flex; align-items: center; gap: 4px; }
       .tsig input { width: 44px; }
       .auto-note { color: var(--muted); font-style: italic; font-size: 11px; }
+
+      /* Credits + licenses overlays (template adapted from the tabs extension). */
+      #infoBtn { font-size: 15px; line-height: 1; }
+      .overlay { position: fixed; inset: 0; z-index: 20; background: #2c2c2c; color: var(--text);
+                 padding: 18px 22px; display: flex; flex-direction: column; overflow: auto; }
+      .overlay[hidden] { display: none; }
+      .overlay a { color: var(--accent); text-decoration: none; }
+      .overlay a:hover { text-decoration: underline; }
+      .overlay h2 { font-size: var(--fs-title); font-weight: 700; line-height: 1.15;
+                    letter-spacing: -0.01em; color: #fff; margin: 0 0 var(--sp-1); }
+      .overlay .tagline { color: var(--muted); font-size: var(--fs-meta); line-height: 1.5;
+                          margin: 0 0 var(--sp-5); max-width: 62ch; }
+      .overlay .bio { color: var(--text); font-size: var(--fs-body); line-height: 1.65;
+                      margin: 0 0 var(--sp-3); max-width: 64ch; }
+      .overlay .bio .lead { display: block; font-size: var(--fs-eyebrow); font-weight: 700;
+                            letter-spacing: 0.07em; text-transform: uppercase;
+                            color: var(--muted); margin: 0 0 var(--sp-1); }
+      .credit-note { color: var(--muted); font-size: var(--fs-meta); line-height: 1.5;
+                     margin: 0 0 var(--sp-4); max-width: 64ch; }
+      .overlay-actions { margin-top: auto; padding-top: 16px; display: flex; gap: 8px; justify-content: flex-end; }
+      .overlay-actions button { background: var(--panel); color: var(--text); border: 1px solid #555;
+                                border-radius: 10px; padding: 6px 18px; cursor: pointer;
+                                font-family: var(--font-sans); font-size: var(--fs-body); font-weight: 500; }
+      .overlay-actions button:hover { background: #5a5a5a; }
+      /* Licenses live inline in the credits panel: a labeled sub-panel that fills
+         the otherwise-empty space below the bio and scrolls on its own. */
+      .licenses-head { font-size: var(--fs-section); font-weight: 600; line-height: 1.2;
+                       color: #fff; margin: 0 0 var(--sp-2);
+                       padding-top: var(--sp-4); border-top: 1px solid var(--border); }
+      .licenses-pre { flex: 1 1 0; min-height: 0; overflow: auto; margin: 0; background: var(--input);
+                      border: 1px solid var(--border); border-radius: 6px; padding: var(--sp-3) var(--sp-4);
+                      color: var(--muted); font-family: var(--font-mono); font-size: var(--fs-mono);
+                      line-height: 1.5; white-space: pre-wrap; }
     </style>
   </head>
   <body>
     <script id="chart-payload" type="application/json">__CHART_PAYLOAD_JSON__</script>
+    <script id="licenses-payload" type="application/json">__THIRD_PARTY_LICENSES_JSON__</script>
 
     <div class="app">
       <header class="topbar">
@@ -126,6 +168,7 @@
           </div>
         </div>
 
+        <button type="button" id="infoBtn" class="ghost icon" title="Credits" aria-label="Credits">ⓘ</button>
         <button type="button" id="closeBtn" class="ghost icon" title="Close" aria-label="Close">✕</button>
       </header>
 
@@ -133,6 +176,16 @@
         <div id="score"></div>
         <span id="status" class="caption"></span>
       </main>
+    </div>
+
+    <div id="credits" class="overlay" hidden>
+      <h2>Sheet Music</h2>
+      <p class="tagline">View an Ableton Live MIDI clip as standard music notation, then export to MusicXML, PDF, or PNG.</p>
+      <p class="bio"><span class="lead">About the Creator</span>Hope you're enjoying Sheet Music! I'm <a href="https://madisonrickert.com" target="_blank" rel="noreferrer">Madison Rickert</a>. I've been both a software engineer and a musician for over 20 years, and it's my joy building tools to empower artists. I create and perform my own music as <a href="https://toefood.music" target="_blank" rel="noreferrer">Toefood</a>.</p>
+      <p class="credit-note">Notation rendered with <a href="https://github.com/opensheetmusicdisplay/opensheetmusicdisplay" target="_blank" rel="noreferrer">OpenSheetMusicDisplay</a>.</p>
+      <h3 class="licenses-head">Open source licenses</h3>
+      <pre id="licensesText" class="licenses-pre"></pre>
+      <div class="overlay-actions"><button type="button" id="creditsClose">Back</button></div>
     </div>
 
     <script type="module" src="./src/main.ts"></script>
