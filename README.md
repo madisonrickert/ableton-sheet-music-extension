@@ -3,7 +3,7 @@
 [![CI](https://github.com/madisonrickert/ableton-sheet-music-extension/actions/workflows/ci.yml/badge.svg)](https://github.com/madisonrickert/ableton-sheet-music-extension/actions/workflows/ci.yml)
 [![Latest release](https://img.shields.io/github/v/release/madisonrickert/ableton-sheet-music-extension?label=release)](https://github.com/madisonrickert/ableton-sheet-music-extension/releases/latest)
 [![License: MIT](https://img.shields.io/github/license/madisonrickert/ableton-sheet-music-extension)](LICENSE)
-[![Ableton Live 12.4.5+](https://img.shields.io/badge/Ableton%20Live-12.4.5%2B-black)](https://www.ableton.com/en/live/extensions)
+[![Ableton Live Suite 12.4.5+](https://img.shields.io/badge/Ableton%20Live%20Suite-12.4.5%2B-black)](https://www.ableton.com/en/live/extensions)
 [![Stars](https://img.shields.io/github/stars/madisonrickert/ableton-sheet-music-extension?style=flat)](https://github.com/madisonrickert/ableton-sheet-music-extension/stargazers)
 
 View any MIDI clip in Ableton Live as readable sheet music. Transpose it for any instrument and export **MusicXML**, **PDF**, or **PNG**. Built on the [Ableton Live Extensions SDK](https://www.ableton.com/en/live/extensions) (beta).
@@ -39,7 +39,7 @@ Download the latest **`.ablx`** from the [**Releases** page](https://github.com/
 2. Drag the `.ablx` onto that page.
 3. Right-click any MIDI clip → **Extensions → Show Chart**.
 
-Requires **Ableton Live 12.4.5 or newer with Extensions** (currently in the Live 12.4.5 beta; tested on 12.4.5b3). The `.ablx` is self-contained and runs inside Live's Extension Host, so you do **not** need Node.js or the SDK installed to use it. Prefer to build it yourself? See [Build from source](#build-from-source).
+Requires **Ableton Live Suite 12.4.5 or newer with Extensions** (currently in the Live 12.4.5 beta; tested on 12.4.5b3). The `.ablx` is self-contained and runs inside Live's Extension Host, so you do **not** need Node.js or the SDK installed to use it. Prefer to build it yourself? See [Build from source](#build-from-source).
 
 ## Build from source
 
