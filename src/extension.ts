@@ -16,6 +16,7 @@ import { detectGrid } from "./notation/durations";
 import { INSTRUMENTS } from "./notation/transpose";
 import type { NoteModel } from "./notation/types";
 import { fileUrl } from "./file-url";
+import { resolveScratchDir } from "./scratch-dir";
 import {
   injectPayload,
   type ChartPayload,
@@ -150,7 +151,11 @@ export function activate(activation: ActivationContext) {
           },
         };
         const html = injectPayload(bundledHtml, payload);
-        const uiPath = path.join(tempDir(), "chart-ui.html");
+        // tempDirectory's sandbox write-grant is unreliable on the first launch after
+        // a reboot (see Ableton SDK feedback #10); fall back to a persistent work/ dir
+        // under storageDirectory, whose grant always resolves, so the window still opens.
+        const scratchDir = await resolveScratchDir([tempDir(), path.join(storageDir(), "work")]);
+        const uiPath = path.join(scratchDir, "chart-ui.html");
         await fs.writeFile(uiPath, html, "utf-8");
 
         const raw = await ctx.ui.showModalDialog(fileUrl(uiPath), 900, 640);
