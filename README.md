@@ -6,9 +6,12 @@
 [![Ableton Live Suite 12.4.5+](https://img.shields.io/badge/Ableton%20Live%20Suite-12.4.5%2B-black)](https://www.ableton.com/en/live/extensions)
 [![Stars](https://img.shields.io/github/stars/madisonrickert/ableton-sheet-music-extension?style=flat)](https://github.com/madisonrickert/ableton-sheet-music-extension/stargazers)
 
-View any MIDI clip in Ableton Live as readable sheet music. Transpose it for any instrument and export **MusicXML**, **PDF**, or **PNG**. Built on the [Ableton Live Extensions SDK](https://www.ableton.com/en/live/extensions) (beta).
+View any MIDI clip in Ableton Live as readable sheet music. Transpose it for any instrument and export **MusicXML**, **PDF**, or **PNG**.
 
 ![Ableton Sheet Music Extension: see any MIDI clip as notation, transpose it, and export MusicXML, PDF, or PNG](docs/social-preview.png)
+
+> [!TIP]
+> Looking for a tool to convert MIDI to tablature? Check out [AbleTab](https://github.com/madisonrickert/abletab).
 
 ## Features
 
@@ -84,3 +87,8 @@ npm run package -- --reveal # same, then reveal the .ablx in Finder (macOS)
 npm test           # unit tests (vitest)
 npm run typecheck  # type-check the extension and the webview
 ```
+
+## Other extensions by the developer
+
+- [AbleTab](https://github.com/madisonrickert/abletab): View any Ableton Live MIDI clip as tablature for guitar, bass, and others
+- [AbleVSEP](https://github.com/madisonrickert/ablevsep): Separate any audio clip into stems with any of MVSEP's 100+ models, right inside Ableton Live 
