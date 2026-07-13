@@ -1,5 +1,7 @@
 import { defineConfig } from "vite";
 import { fileURLToPath } from "node:url";
+import { dirname, join } from "node:path";
+import { createRequire } from "node:module";
 import { readFileSync, readdirSync } from "node:fs";
 import { viteSingleFile } from "vite-plugin-singlefile";
 import license from "rollup-plugin-license";
@@ -19,23 +21,33 @@ const licenseReport = fileURLToPath(
 // minus the types-only @types/vexflow.)
 const OSMD_INLINED_DEPS = ["vexflow", "jszip", "loglevel", "typescript-collections"];
 
-function pkgUrl(name: string, file: string): string {
-  return fileURLToPath(new URL(`./node_modules/${name}/${file}`, import.meta.url));
+// Resolve OSMD's own dependencies through Node's module resolution, anchored at
+// OSMD's install location rather than a hardcoded `./node_modules/<name>` path.
+// Under npm's flat node_modules these usually get hoisted to the project root
+// too, but pnpm's isolated node_modules only symlinks *direct* dependencies
+// there; OSMD's own deps live nested under its own node_modules (inside the
+// pnpm store), so resolution has to start from OSMD itself to find them under
+// either package manager.
+const requireFromHere = createRequire(import.meta.url);
+const osmdRequire = createRequire(requireFromHere.resolve("opensheetmusicdisplay/package.json"));
+
+function pkgDir(name: string): string {
+  return dirname(osmdRequire.resolve(`${name}/package.json`));
 }
 
 /** Read a package's shipped license/notice file (whatever it's named), or fall back to its SPDX id. */
 function readLicenseText(name: string, spdx: string): string {
-  const dir = fileURLToPath(new URL(`./node_modules/${name}/`, import.meta.url));
+  const dir = pkgDir(name);
   const file = readdirSync(dir).find((f) => /^(licen[sc]e|copying|notice)/i.test(f));
   return file
-    ? readFileSync(`${dir}${file}`, "utf-8").trim()
+    ? readFileSync(join(dir, file), "utf-8").trim()
     : `(No license file was shipped with this package. SPDX: ${spdx}.)`;
 }
 
 /** A notice block for one OSMD-inlined dependency, sourced from node_modules at build time. */
 function inlinedDepBlock(name: string): string {
   try {
-    const pkg = JSON.parse(readFileSync(pkgUrl(name, "package.json"), "utf-8"));
+    const pkg = JSON.parse(readFileSync(join(pkgDir(name), "package.json"), "utf-8"));
     const repo =
       pkg.homepage ||
       (typeof pkg.repository === "string" ? pkg.repository : pkg.repository?.url) ||

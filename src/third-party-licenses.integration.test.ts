@@ -13,8 +13,8 @@ describe("third-party license notices", () => {
   let report = "";
 
   beforeAll(() => {
-    // npm picks the right local vite; build:ui is what runs rollup-plugin-license.
-    execFileSync("npm", ["run", "build:ui"], { stdio: "inherit" });
+    // pnpm picks the right local vite; build:ui is what runs rollup-plugin-license.
+    execFileSync("pnpm", ["run", "build:ui"], { stdio: "inherit" });
     report = readFileSync(reportPath, "utf-8");
   });
 

@@ -1,0 +1,9 @@
+allowBuilds:
+  # esbuild's postinstall fetches its platform binary; required to run at all.
+  esbuild: true
+  # core-js's postinstall is just a donation-nag message wrapped in try/catch; harmless to skip.
+  core-js: false
+  # gl is an optionalDependency of opensheetmusicdisplay (native canvas bindings for
+  # its own headless test/rendering suite); we only use OSMD's DOM/SVG rendering path
+  # in the webview, so gl's node-gyp build is unnecessary here.
+  gl: false

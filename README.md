@@ -53,9 +53,9 @@ This project depends on the Ableton Extensions SDK, which is not published to np
    ```bash
    cp .env.example .env
    # set ABLETON_SDK_PATH to your unpacked SDK, e.g. /path/to/extensions-sdk-1.0.0-beta.0
-   npm run setup
+   pnpm run setup
    ```
-   `npm run setup` copies the SDK tarballs into `./vendor/` (git-ignored) and installs all dependencies. Set the path once and you never edit `package.json`.
+   `pnpm run setup` copies the SDK tarballs into `./vendor/` (git-ignored) and installs all dependencies. Set the path once and you never edit `package.json`.
 
 Building from source needs **Node.js ≥ 24** and the **Ableton Extensions SDK (beta)**, distributed by Ableton and **not** included in this repository.
 
@@ -67,25 +67,25 @@ The fastest loop uses Live's Developer Mode and an externally-launched Extension
 2. In Live: **Preferences → Extensions → enable Developer Mode**.
 3. Build and launch the host (leave it running):
    ```bash
-   npm start
+   pnpm start
    ```
 4. Right-click a MIDI clip → **Extensions → Show Chart**.
 
 ## Build & package
 
 ```bash
-npm run build               # production bundle → dist/extension.js
-npm run package             # build + package the installable → release/Sheet-Music-<version>.ablx
-npm run package -- --reveal # same, then reveal the .ablx in Finder (macOS)
+pnpm run build               # production bundle → dist/extension.js
+pnpm run package             # build + package the installable → release/Sheet-Music-<version>.ablx
+pnpm run package -- --reveal # same, then reveal the .ablx in Finder (macOS)
 ```
 
-`npm run package` writes the installable to `release/` (git-ignored), clearing any older `.ablx` first so there's only ever the current one. Install it by dropping the `.ablx` onto Live's **Extensions** preferences (with Developer Mode **off**, so Live manages the host).
+`pnpm run package` writes the installable to `release/` (git-ignored), clearing any older `.ablx` first so there's only ever the current one. Install it by dropping the `.ablx` onto Live's **Extensions** preferences (with Developer Mode **off**, so Live manages the host).
 
 ## Test
 
 ```bash
-npm test           # unit tests (vitest)
-npm run typecheck  # type-check the extension and the webview
+pnpm test           # unit tests (vitest)
+pnpm run typecheck  # type-check the extension and the webview
 ```
 
 ## Other extensions by the developer
